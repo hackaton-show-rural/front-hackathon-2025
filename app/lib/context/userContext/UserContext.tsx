@@ -16,24 +16,11 @@ type Props = {
 
 export const UserProvider: React.FC<Props> = ({ children }) => {
   const cookies = new Cookies()
-  // const router = useRouter()
-  // const params = useSearchParams()
-  // const path = usePathname()
   const userInCookie = cookies.get(USER_COOKIE_NAME)
   const [userCtx, setUserCtx] = useState<IUser | undefined>({
     ...(userInCookie as IUser)
   })
-  // this is not being used and needs a better implementation
-  /*   useEffect(() => {
-      // if route is in (outterApp) do nothing
-      if (path === "/403" || path === "/usageTerms") return
-  
-      if (!userCtx) {
-        const plan = params.get("plan")
-        router.push(`/login${plan ? `?plan=${plan}` : ""}`)
-      }
-    }, [router, userCtx])
-   */
+
   const values = {
     userCtx,
     setUserCtx,

@@ -1,10 +1,6 @@
 import { ROLES } from "../constants"
-import { IUser } from "./auth"
 
 export type DefType = {
-  active: boolean
-  id: number
-  name: string
 }
 
 export interface Company extends DefType { }
@@ -44,12 +40,6 @@ export interface Pagination<T> {
   totalElements: number
   totalPages: number
   content: T[]
-}
-
-export interface User {
-  name: string
-  role: IUser["role"]
-  company: Company
 }
 
 export interface GetApiParams {

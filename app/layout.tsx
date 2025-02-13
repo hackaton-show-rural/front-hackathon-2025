@@ -1,8 +1,6 @@
-import { Toast } from "@components/Toast"
 import { LayoutProvider } from "@context/LayoutContext"
 import { QueryContext } from "@context/queryContext"
 import { UserProvider } from "@context/userContext"
-import { Analytics } from "@vercel/analytics/react"
 import { Metadata, Viewport } from "next"
 import { Mulish } from "next/font/google"
 import "./globals.css"
@@ -52,8 +50,6 @@ export default function RootLayout({
           <LayoutProvider>
             <body className={className}>
               {children}
-              <Toast />
-              <Analytics />
             </body>
           </LayoutProvider>
         </UserProvider>
