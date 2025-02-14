@@ -120,18 +120,14 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex gap-4 items-center">
-        <Input
-          placeholder="Pesquisar documentos..."
-          className="max-w-sm"
-          onChange={handleSearch}
-        />
+
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="w-[200px] pl-3 text-left font-normal">
               {date ? (
-                format(date, "PPP", { locale: ptBR })
+                format(date, "dd/MM/yyyy", { locale: ptBR })
               ) : (
-                <span>Selecionar data</span>
+                <span>Selecionar vencimento</span>
               )}
               <CalendarIcon className="ml-auto h-4 w-4" />
             </Button>
@@ -146,16 +142,20 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
             />
           </PopoverContent>
         </Popover>
+        <Input
+          placeholder="Pesquisar documentos..."
+          className=""
+          onChange={handleSearch}
+        />
       </div>
       <Table>
         <TableCaption>Lista de documentos</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>ID do Documento</TableHead>
+            <TableHead>Vencimento</TableHead>
             <TableHead>Nome</TableHead>
             <TableHead>CNPJ</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Data</TableHead>
             <TableHead className="text-right">Ações</TableHead>
           </TableRow>
         </TableHeader>
@@ -166,16 +166,15 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                 className="cursor-pointer hover:bg-muted/50"
                 onClick={() => handleRowClick(doc)}
               >
-                <TableCell className="font-medium">{doc.id}</TableCell>
+                <TableCell>
+                  {format(parseISO(doc.limitDate), "dd/MM/yyyy", { locale: ptBR })}
+                </TableCell>
                 <TableCell>{doc.identifier.name}</TableCell>
                 <TableCell>{doc.cnpj}</TableCell>
                 <TableCell >
                   <Badge className={`px-2 font-semibold mt-4 rounded ${getStatusColor(doc.status)}`}>
                     {getStatusName(doc.status)}
                   </Badge>
-                </TableCell>
-                <TableCell>
-                  {format(parseISO(doc.limitDate), "dd/MM/yyyy", { locale: ptBR })}
                 </TableCell>
                 <TableCell className="text-right">
                   <Button variant="ghost" size="sm">
