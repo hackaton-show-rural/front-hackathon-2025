@@ -1,12 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   //reactStrictMode: true,
-  /* eslint: {
+  eslint: {
      ignoreDuringBuilds: true,
    },
    typescript: {
      ignoreBuildErrors: true,
-   },*/
+   },
   swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV !== "development",
