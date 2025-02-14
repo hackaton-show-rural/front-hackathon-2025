@@ -15,12 +15,15 @@ import { useState } from "react";
 
 export default function() {
   const generateColorHex = () => {
-    // Generate random blue value (0–255)
-    const blue = Math.floor(Math.random() * 256);
+    // Generate random RGB values in the range 100–255
+    const r = Math.floor(Math.random() * 156) + 100; // Range: 100–255
+    const g = Math.floor(Math.random() * 156) + 100; // Range: 100–255
+    const b = Math.floor(Math.random() * 156) + 100; // Range: 100–255
 
-    // Convert RGB (0, 0, blue) to hex
-    const color = (blue).toString(16).padStart(2, '0'); // Blue component
-    return `#0000${color}`; // Red and green are fixed to 0
+    // Convert RGB to hex
+    const color = ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+
+    return `#${color}`;
   };
   /*   const { data: barData } = useQuery({ queryKey: ['getBarData'], queryFn: getBar }); */
   const [pieConfig, setPieConfig] = useState({})
