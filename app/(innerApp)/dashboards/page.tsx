@@ -1,12 +1,12 @@
 
 "use client";
-import { BarChartC } from "@/app/components/BarChart";
+import { AreaC } from "@/app/components/Area";
 import { RadialChart } from "@/app/components/RadialChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import Image from "next/image";
-import { getBar } from "@/app/lib/api/bar";
+import { getArea } from "@/app/lib/api/area";
 import { useQuery } from "@tanstack/react-query";
 import { getRadial } from "@/app/lib/api/radial";
 import { getPie } from "@/app/lib/api/pie";
@@ -25,8 +25,9 @@ export default function() {
 
     return `#${color}`;
   };
-  /*   const { data: barData } = useQuery({ queryKey: ['getBarData'], queryFn: getBar }); */
   const [pieConfig, setPieConfig] = useState({})
+
+  const { data: areaData } = useQuery({ queryKey: ['getAreaData'], queryFn: getArea });
   const { data: radialData } = useQuery({
     queryKey: ['getRadialData'], queryFn: async () => {
       let data = await getRadial();
@@ -92,7 +93,8 @@ export default function() {
             <CardHeader>
               <CardTitle>Progresso Mensal</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="m-auto">
+              <AreaC data={areaData} />
             </CardContent>
           </Card>
         </div>

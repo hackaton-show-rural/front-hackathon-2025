@@ -1,10 +1,10 @@
 import { makeApiRequest } from "../makeApiRequest"
 import { Bar } from "./types"
 
-export const getBar = async () => {
+export const getArea = async () => {
   return makeApiRequest<Bar>({
     method: "get",
-    url: `documents/chart/bar`,
+    url: `documents/chart/area`,
   })
 }
 

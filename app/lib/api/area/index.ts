@@ -1,2 +1,2 @@
-export * from "./bar"
+export * from "./area"
 export * from "./types"
