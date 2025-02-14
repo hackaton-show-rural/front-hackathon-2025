@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -27,7 +28,7 @@ import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Documents } from '@/app/lib/api/documents';
 import Link from 'next/link';
-import { Link as LinkIco } from 'lucide-react';
+import { Link as LinkIco, Eye } from 'lucide-react';
 
 interface Page {
   content: Document[];
@@ -45,7 +46,37 @@ interface DocumentsTableProps {
   hasNextPage?: boolean;
   setQuery: (query: string) => void;
   setParams: React.Dispatch<React.SetStateAction<{ key: string; value: string }[] | undefined>>;
+  qParams: any
 }
+
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "WARNING":
+      return "bg-yellow-300 hover:bg-yellow-300 text-yellow-300 text-gray-700";
+    case "URGENT":
+      return "bg-red-500 hover:bg-red-500 text-red-50";
+    case "REGULAR":
+      return "bg-green-500 hover:bg-green-500 text-green-50";
+    default:
+      return "bg-gray-500 text-gray-900";
+  }
+};
+
+const getStatusName = (status: string) => {
+  switch (status) {
+    case "WARNING":
+      return "Atenção";
+    case "URGENT":
+      return "Urgente";
+    case "REGULAR":
+      return "Regular";
+    default:
+      return "Atrasado";
+  }
+}
+
+
 
 export const DocumentsTable: React.FC<DocumentsTableProps> = ({
   data,
@@ -53,11 +84,20 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
   fetchNextPage,
   hasNextPage,
   setQuery,
-  setParams
+  setParams,
+  qParams,
 }) => {
   const [selectedDocument, setSelectedDocument] = useState<Documents | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [date, setDate] = useState<Date | null>(null);
+
+
+  useEffect(() => {
+    if (qParams && qParams.toString()) {
+      setDialogOpen(true)
+      setSelectedDocument(data?.pages?.[0].content?.[0])
+    }
+  }, [data])
 
   const handleDateSelect = (selectedDate: Date | null) => {
     setDate(selectedDate);
@@ -77,7 +117,6 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
     setSelectedDocument(doc);
     setDialogOpen(true);
   };
-
   return (
     <div className="space-y-4">
       <div className="flex gap-4 items-center">
@@ -115,6 +154,7 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
             <TableHead>ID do Documento</TableHead>
             <TableHead>Nome</TableHead>
             <TableHead>CNPJ</TableHead>
+            <TableHead>Status</TableHead>
             <TableHead>Data</TableHead>
             <TableHead className="text-right">Ações</TableHead>
           </TableRow>
@@ -129,12 +169,17 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                 <TableCell className="font-medium">{doc.id}</TableCell>
                 <TableCell>{doc.identifier.name}</TableCell>
                 <TableCell>{doc.cnpj}</TableCell>
+                <TableCell >
+                  <Badge className={`px-2 font-semibold mt-4 rounded ${getStatusColor(doc.status)}`}>
+                    {getStatusName(doc.status)}
+                  </Badge>
+                </TableCell>
                 <TableCell>
-                  {format(parseISO(doc.limitDate), "PPP", { locale: ptBR })}
+                  {format(parseISO(doc.limitDate), "dd/MM/yyyy", { locale: ptBR })}
                 </TableCell>
                 <TableCell className="text-right">
                   <Button variant="ghost" size="sm">
-                    Visualizar
+                    <Eye />
                   </Button>
                 </TableCell>
               </TableRow>
@@ -180,48 +225,81 @@ const DocumentDialog: React.FC<DocumentDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto rounded-lg shadow-xl">
         <DialogHeader>
-          <DialogTitle className='flex flex-row gap-4'>Detalhes do Documento  <Link href={document?.documentUrl || "a"} target='_blank' ><LinkIco className='w-4' /></Link></DialogTitle>
+          <DialogTitle className="flex items-center gap-3 text-xl font-bold text-gray-900">
+            Detalhes do Documento
+            <Link href={document?.documentUrl || "#"} target="_blank">
+              <LinkIco className="w-5 hover:text-blue-500 transition-transform hover:scale-110" />
+            </Link>
+          </DialogTitle>
         </DialogHeader>
         <div className="grid gap-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="font-semibold">Protocolo:</label>
-              <p>{document.protocol}</p>
+              <label className="font-semibold text-gray-600">Protocolo:</label>
+              <p className="text-gray-900">{document.protocol}</p>
             </div>
             <div>
-              <label className="font-semibold">Número:</label>
-              <p>{document.number}</p>
+              <label className="font-semibold text-gray-600">Número:</label>
+              <p className="text-gray-900">{document.number}</p>
             </div>
             <div>
-              <label className="font-semibold">Data Limite:</label>
-              <p>  {format(parseISO(document.limitDate), "PPP", { locale: ptBR })}</p>
+              <label className="font-semibold text-gray-600">Data Limite:</label>
+              <p className="text-gray-900">
+                {format(parseISO(document.limitDate), "dd/MM/yyyy", { locale: ptBR })}
+              </p>
+            </div>
+            <div>
+              <label className="font-semibold text-gray-600">Status:</label>
+              <div>
+                <Badge
+                  className={`px-2 mt-2 rounded text-md font-bold ${getStatusColor(document.status)}`}
+                >
+                  {getStatusName(document.status)}
+                </Badge>
+              </div>
             </div>
           </div>
 
           <div className="border-t pt-4">
-            <h3 className="font-semibold mb-2">Identificação</h3>
+            <h3 className="font-semibold text-lg text-gray-800 mb-4">Identificação</h3>
             <div className="grid gap-2">
-              <p><span className="font-medium">Nome:</span> {document.identifier.name}</p>
-              <p><span className="font-medium">Endereço:</span> {document.identifier.address}</p>
-              <p><span className="font-medium">Cidade:</span> {document.identifier.city}</p>
-              <p><span className="font-medium">CEP:</span> {document.identifier.postalCode}</p>
+              <p>
+                <span className="font-medium text-gray-600">Nome:</span>{" "}
+                <span className="text-gray-900">{document.identifier.name}</span>
+              </p>
+              <p>
+                <span className="font-medium text-gray-600">Endereço:</span>{" "}
+                <span className="text-gray-900">{document.identifier.address}</span>
+              </p>
+              <p>
+                <span className="font-medium text-gray-600">Cidade:</span>{" "}
+                <span className="text-gray-900">{document.identifier.city}</span>
+              </p>
+              <p>
+                <span className="font-medium text-gray-600">CEP:</span>{" "}
+                <span className="text-gray-900">{document.identifier.postalCode}</span>
+              </p>
             </div>
           </div>
 
           {document.conditions.length > 0 && (
-            <div className="border-t pt-4">
-              <h3 className="font-semibold mb-2">Condições</h3>
-              <ul className="list-disc pl-4 space-y-2">
+            <div className="border-t pt-2">
+              <h3 className="font-semibold text-lg text-gray-800 mb-2">Condições</h3>
+              <ul className="list-disc pl-6 space-y-1">
                 {document.conditions.map((condition, index) => (
-                  <li key={index}>{condition}</li>
+                  <li
+                    key={index}
+                    className="text-gray-700 leading-relaxed transition-all hover:bg-gray-50 p-2 rounded textx-sm"
+                  >
+                    {condition}
+                  </li>
                 ))}
               </ul>
             </div>
           )}
         </div>
       </DialogContent>
-    </Dialog >
-  );
+    </Dialog>);
 };

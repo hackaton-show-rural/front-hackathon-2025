@@ -8,7 +8,6 @@ export const getDocuments = async ({
   limit,
   filter,
 }: GetApiParams) => {
-  console.log("here")
   return makeApiRequest<Pagination<Documents>>({
     method: "get",
     url: `documents?offset=${offset}&limit=${limit}${filter || ""}`,

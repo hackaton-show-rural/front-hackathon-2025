@@ -1,13 +1,10 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
-
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -18,14 +15,15 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
+
 const chartConfig = {
-  desktop: {
+  done: {
     label: "Concluido",
-    color: "hsl(var(--chart-1))",
+    color: "#31F5A9",
   },
-  mobile: {
+  missing: {
     label: "Faltando",
-    color: "hsl(var(--chart-2))",
+    color: "#F4324C",
   },
 } satisfies ChartConfig
 
@@ -59,8 +57,8 @@ export const BarChartC = ({ data }: ChartData) => {
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="missing" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="done" fill="var(--color-mobile)" radius={4} />
+            <Bar dataKey="missing" fill="var(--color-missing)" radius={4} />
+            <Bar dataKey="done" fill="var(--color-done)" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>

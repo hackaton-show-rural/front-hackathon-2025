@@ -7,6 +7,7 @@ export interface Documents extends DefType {
   "limitDate": string,
   "cnpj": string,
   "documentUrl": string,
+  "status": string,
   "identifier": {
     "id": number,
     "name": string,

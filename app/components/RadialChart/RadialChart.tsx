@@ -13,33 +13,55 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+import { useEffect, useState } from "react"
 
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
+  WARNING: {
+    label: "Atenção",
+    color: "#FDE047",
   },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
+  URGENT: {
+    label: "Urgente",
+    color: "#EF4444",
+  },
+  REGULAR: {
+    label: "Regular",
+    color: "#22C55E",
   },
 } satisfies ChartConfig
 
 type ChartData = {
   data: {
-    missing: number,
-    done: number,
+    WARNING: number,
+    URGENT: number,
+    REGULAR: number,
   }[]
 }
 
 export const RadialChart = ({ data }: ChartData) => {
-  const totalVisitors = data[0].missing + data[0].done
+  const [totalVisitors, setTotalVisitors] = useState(0)
+  useEffect(() => {
+    let cnt = 0
+
+    if (data?.[0]?.WARNING) {
+      cnt += data?.[0]?.WARNING
+    }
+    if (data?.[0]?.URGENT) {
+      cnt += data?.[0]?.URGENT
+    }
+    if (data?.[0]?.REGULAR) {
+      cnt += data?.[0]?.REGULAR
+    }
+
+    setTotalVisitors(cnt)
+  }, [data])
+
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Demandas deste mes</CardTitle>
+        <CardTitle>Demandas deste mês</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-1 items-center pb-0">
         <ChartContainer
@@ -83,15 +105,22 @@ export const RadialChart = ({ data }: ChartData) => {
               />
             </PolarRadiusAxis>
             <RadialBar
-              dataKey="missing"
+              dataKey="REGULAR"
               stackId="a"
               cornerRadius={5}
-              fill="var(--color-desktop)"
+              fill="var(--color-REGULAR)"
               className="stroke-transparent stroke-2"
             />
             <RadialBar
-              dataKey="done"
-              fill="var(--color-mobile)"
+              dataKey="URGENT"
+              fill="var(--color-URGENT)"
+              stackId="a"
+              cornerRadius={5}
+              className="stroke-transparent stroke-2"
+            />
+            <RadialBar
+              dataKey="WARNING"
+              fill="var(--color-WARNING)"
               stackId="a"
               cornerRadius={5}
               className="stroke-transparent stroke-2"

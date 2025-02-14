@@ -3,7 +3,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { getDocuments } from "../lib/api/documents"
 import { filterBuilder } from "../lib/filterBuilder"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { DocumentsTable } from "@components/DocumentsTable"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -11,8 +11,12 @@ import { Button } from "@/components/ui/button"
 import { Search, FileText, RefreshCw } from "lucide-react"
 import { FileDialog } from "../components/FileDialog"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
+import Image from "next/image"
 
 export default function Home() {
+  const qParams = useSearchParams()
+
   const [query, setQuery] = useState<string>("")
   const [params, setParams] = useState<{ key: string; value: string }[]>()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -69,13 +73,9 @@ export default function Home() {
           <div className="py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <FileText className="h-6 w-6 text-primary" />
-                <div>
-                  <h1 className="text-xl font-semibold">Gerenciamento de Documentos</h1>
-                  <p className="text-sm text-muted-foreground">
-                    Visualize e gerencie seus documentos
-                  </p>
-                </div>
+                <Link href="/">
+                  <Image src="/docvel.png" alt='asdf' width="100" height="50" />
+                </Link>
               </div>
               <div className="flex items-center space-x-2">
                 <Link href={"/dashboards"} className="mr-10 text-sm text-slate-500"> Dashboard </Link>
@@ -111,6 +111,7 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <DocumentsTable
+              qParams={qParams}
               data={data}
               isLoading={isLoading}
               fetchNextPage={fetchNextPage}

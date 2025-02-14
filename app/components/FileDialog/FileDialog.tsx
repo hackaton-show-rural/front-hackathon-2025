@@ -33,7 +33,6 @@ export const FileDialog = ({ isDialogOpen, setIsDialogOpen }: {
     e.preventDefault()
     await mutateDocuments({ data: { files: files } })
     queryClient.invalidateQueries({ queryKey: ["getDocuments"] })
-    console.log(files)
     setFiles([])
     setIsDialogOpen(false)
   }
