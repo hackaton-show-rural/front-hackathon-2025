@@ -55,14 +55,6 @@ export default function() {
   });
 
 
-  const data2 = [
-    { month: "Janeiro", done: 186, missing: 80 },
-    { month: "Fevereiro", done: 305, missing: 200 },
-    { month: "Março", done: 237, missing: 120 },
-    { month: "Abril", done: 73, missing: 190 },
-    { month: "Maio", done: 209, missing: 130 },
-    { month: "Junho", done: 214, missing: 140 },
-  ];
 
   return (
     <main className="min-h-screen bg-gray-50 relative gap-4 flex flex-col">
