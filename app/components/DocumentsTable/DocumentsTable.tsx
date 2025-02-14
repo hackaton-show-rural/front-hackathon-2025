@@ -155,6 +155,7 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
             <TableHead>Vencimento</TableHead>
             <TableHead>Nome</TableHead>
             <TableHead>CNPJ</TableHead>
+            <TableHead>Atividade</TableHead>
             <TableHead>Status</TableHead>
             <TableHead className="text-right">Ações</TableHead>
           </TableRow>
@@ -171,6 +172,7 @@ export const DocumentsTable: React.FC<DocumentsTableProps> = ({
                 </TableCell>
                 <TableCell>{doc.identifier.name}</TableCell>
                 <TableCell>{doc.cnpj}</TableCell>
+                <TableCell>{doc.activity}</TableCell>
                 <TableCell >
                   <Badge className={`px-2 font-semibold mt-4 rounded ${getStatusColor(doc.status)}`}>
                     {getStatusName(doc.status)}
@@ -220,6 +222,9 @@ const DocumentDialog: React.FC<DocumentDialogProps> = ({
   open,
   onOpenChange,
 }) => {
+
+
+
   if (!document) return null;
 
   return (
@@ -300,5 +305,6 @@ const DocumentDialog: React.FC<DocumentDialogProps> = ({
           )}
         </div>
       </DialogContent>
-    </Dialog>);
+    </Dialog>
+  );
 };
